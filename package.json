@@ -1,0 +1,12 @@
+{
+	"version": "1.0.0",
+	"name": "bnpm",
+	"private": true,
+	"dependencies": {},
+	"main": "src/npm.js",
+	"bin": { "bnpm-build": "./src/npm.js" , "bnpm-version": "./src/updateversion.js"},
+	"scripts": {},
+	"devDependencies": {
+		"upath": "^2.0.1"
+	}
+}
