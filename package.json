@@ -3,7 +3,6 @@
 	"name": "bnpm",
 	"private": true,
 	"dependencies": {},
-	"main": "src/npm.js",
 	"bin": { "bnpm-build": "./src/npm.js" , "bnpm-version": "./src/updateversion.js"},
 	"scripts": {},
 	"devDependencies": {
