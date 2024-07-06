@@ -1,0 +1,14 @@
+{
+	"version": "1.0.0",
+	"name": "example1",
+	"main": "index.ts",
+	"dependencies": {
+		"example2": "file:../example2"
+	},
+	"devDependencies": {
+		"typescript": "^5.4.2"
+	},
+	"scripts": {
+		"build": "tsc"
+	}
+}

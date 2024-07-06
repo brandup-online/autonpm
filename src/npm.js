@@ -9,6 +9,7 @@ const getArgsList = (startIndex = 3) => process.argv.reduce((acc, current, index
 const commands = {
     install: (args) => `npm install ${args}`,
     build: (args) => `npm run build ${args}`,
+    version: (args) => `npm version ${args}`,
     pack: (args) => `npm pack ${args}`
 }
 

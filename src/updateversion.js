@@ -14,7 +14,6 @@ const relativePackagesPath = process.env.NPM_PATH || 'npm';
 const rootDir = process.cwd();
 const npmDir = upath.join(rootDir, relativePackagesPath);
 
-
 fs.readdirSync(npmDir, { recursive: false }).forEach(file => {
     let packageFile = upath.join(npmDir, file, "package.json");
     let packageJson = getPackageJson(packageFile);

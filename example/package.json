@@ -1,0 +1,15 @@
+{
+	"version": "1.0.0",
+	"name": "bnpm-example",
+	"private": true,
+	"dependencies": {},
+	"devDependencies": {
+		"bnpm": "file:../"
+	},
+	"scripts": {
+		"npm:install": "bnpm install",
+		"npm:build": "bnpm-npm build",
+		"version": "bnpm-npm version 2.0.5 --no-git-tag-version",
+		"npm:pack": "bnpm-npm pack"
+	}
+}

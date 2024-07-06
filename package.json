@@ -1,10 +1,14 @@
 {
 	"version": "1.0.0",
 	"name": "bnpm",
-	"private": true,
-	"dependencies": {},
-	"bin": { "bnpm-build": "./src/npm.js" , "bnpm-version": "./src/updateversion.js"},
-	"scripts": {},
+	"bin": { 
+		"bnpm": "src/npm.js"
+	},
+	"files": [ 
+		"src", 
+		"README.md", 
+		"package.json"
+	],
 	"devDependencies": {
 		"upath": "^2.0.1"
 	}
