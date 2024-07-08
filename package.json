@@ -1,8 +1,36 @@
 {
 	"version": "1.0.0",
 	"name": "bnpm",
+	"description": "Automation of multiple execution of NPM scripts.",
+	"keywords": [
+		"brandup",
+		"npm"
+	],
+	"author": {
+    	"name": "BrandUp",
+    	"email": "it@brandup.online"
+  	},
+  	"contributors": [
+    	{
+      		"name": "Mikhail Nazarov",
+      		"url": "https://github.com/Mikhail-Nazarov",
+      		"email": "misha-nazarov.nazarov@yandex.ru"
+    	},
+    	{
+      		"name": "Dmitry Kovyazin",
+      		"url": "https://github.com/dkovyazin",
+    		"email": "it@brandup.online"
+    	}
+  	],
+	"homepage": "https://github.com/brandup-online/bnpm",
+	"repository": {
+	  "type": "git",
+	  "url": "https://github.com/brandup-online/bnpm"
+	},
+	"license": "Apache-2.0",
 	"bin": { 
-		"bnpm": "src/npm.js", "bnpm-version": "./src/updateversion.js"
+		"bnpm": "src/npm.js",
+		"bnpm-version": "./src/updateversion.js"
 	},
 	"files": [ 
 		"src", 
