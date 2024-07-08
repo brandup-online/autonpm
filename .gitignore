@@ -397,3 +397,5 @@ FodyWeavers.xsd
 # JetBrains Rider
 *.sln.iml
 **/package-lock.json
+example/**/*.js
+example/**/*.tgz

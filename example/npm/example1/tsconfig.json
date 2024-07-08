@@ -1,0 +1,28 @@
+{
+  "compilerOptions": {
+    "module": "ES2020",
+    "moduleResolution": "node",
+    "target": "ESNext",
+    "sourceMap": false,
+    "strict": false,
+    "lib": [ "DOM", "ES2020" ],
+    "esModuleInterop": true,
+    "noImplicitAny": false,
+    "noEmitOnError": true,
+    "baseUrl": "./source",
+    "declaration": false,
+    "declarationMap": false,
+    "removeComments": false,
+    "outDir": "./out"
+  },
+  "exclude": [
+    "node_modules",
+    "dist",
+    ".vs",
+    ".vscode"
+  ],
+  "compileOnSave": true,
+  "typeAcquisition": {
+    "enable": true
+  }
+}

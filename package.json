@@ -2,7 +2,7 @@
 	"version": "1.0.0",
 	"name": "bnpm",
 	"bin": { 
-		"bnpm": "src/npm.js"
+		"bnpm": "src/npm.js", "bnpm-version": "./src/updateversion.js"
 	},
 	"files": [ 
 		"src", 

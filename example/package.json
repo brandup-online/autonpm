@@ -8,8 +8,9 @@
 	},
 	"scripts": {
 		"npm:install": "bnpm install",
-		"npm:build": "bnpm-npm build",
-		"version": "bnpm-npm version 2.0.5 --no-git-tag-version",
-		"npm:pack": "bnpm-npm pack"
+		"npm:build": "bnpm build",
+		"version": "bnpm version",
+		"npm:pack": "bnpm pack",
+		"version-custom": "bnpm-version"
 	}
 }

@@ -1,5 +1,5 @@
 export class Example2 {
-    run() {
+    static run() {
         alert("example2");
     }
 }
