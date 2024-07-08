@@ -22,10 +22,14 @@
     		"email": "it@brandup.online"
     	}
   	],
-	"homepage": "https://github.com/brandup-online/bnpm",
+	"homepage": "https://github.com/brandup-online/autonpm",
 	"repository": {
-	  "type": "git",
-	  "url": "https://github.com/brandup-online/bnpm"
+	  	"type": "git",
+	  	"url": "https://github.com/brandup-online/autonpm"
+	},
+	"bugs": {
+		"url": "https://github.com/brandup-online/autonpm/issues",
+		"email": "it@brandup.online"
 	},
 	"license": "Apache-2.0",
 	"bin": { 
