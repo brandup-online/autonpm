@@ -4,7 +4,7 @@
 	"private": true,
 	"dependencies": {},
 	"devDependencies": {
-		"autonpm": "file:../"
+		"@brandup/autonpm": "file:../"
 	},
 	"scripts": {
 		"npm:install": "autonpm install",

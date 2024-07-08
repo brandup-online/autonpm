@@ -1,6 +1,6 @@
 {
 	"version": "1.0.0",
-	"name": "autonpm",
+	"name": "@brandup/autonpm",
 	"description": "Automation of multiple execution of NPM scripts.",
 	"keywords": [
 		"brandup",
