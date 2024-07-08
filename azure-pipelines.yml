@@ -55,7 +55,7 @@ stages:
       displayName: "npm pack"
       inputs:
         command: custom
-        customCommand: "run pack --pack-destination $(Build.ArtifactStagingDirectory)"
+        customCommand: "pack --pack-destination $(Build.ArtifactStagingDirectory)"
 
     - publish: $(build.artifactstagingdirectory)
       displayName: publish artifact
