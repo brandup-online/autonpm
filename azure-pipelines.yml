@@ -1,6 +1,5 @@
 trigger:
-- none
-#- master
+- master
 
 resources:
 - repo: self
@@ -57,36 +56,36 @@ stages:
         command: custom
         customCommand: "pack --pack-destination $(Build.ArtifactStagingDirectory)"
 
-    - task: CopyFiles@2
-      displayName: 'autonpm copy to artifact'
-      inputs:
-        SourceFolder: ''
-        Contents: |
-         src/**
-         package.json
-         README.md
-        TargetFolder: '$(Build.ArtifactStagingDirectory)/autonpm/'
+#    - task: CopyFiles@2
+#      displayName: 'autonpm copy to artifact'
+#      inputs:
+#        SourceFolder: ''
+#        Contents: |
+#         src/**
+#         package.json
+#         README.md
+#        TargetFolder: '$(Build.ArtifactStagingDirectory)/autonpm/'
 
     - publish: $(build.artifactstagingdirectory)
       displayName: publish artifact
       condition: succeededOrFailed()
       artifact: npm
 
-#  - job: GitTag
-#    displayName: Add git tag
-#    dependsOn: [ BuildNpm ]
-#    condition: succeeded()
-#    steps:
-#    - checkout: self
-#      clean: "true"
-#      persistCredentials: "true"
-#
-#    - pwsh: |
-#          git config --global user.name "AzureDevOps Agent"
-#          git tag "$(Build.BuildNumber)" --force
-#          git push origin "$(Build.BuildNumber)" --force
-#          Write-Output "Tagging $(Build.Repository.Name) with $(Build.BuildNumber)"
-#      displayName:  set git tag
+  - job: GitTag
+    displayName: Add git tag
+    dependsOn: [ BuildNpm ]
+    condition: succeeded()
+    steps:
+    - checkout: self
+      clean: "true"
+      persistCredentials: "true"
+
+    - pwsh: |
+          git config --global user.name "AzureDevOps Agent"
+          git tag "$(Build.BuildNumber)" --force
+          git push origin "$(Build.BuildNumber)" --force
+          Write-Output "Tagging $(Build.Repository.Name) with $(Build.BuildNumber)"
+      displayName:  set git tag
 
 - stage: Production
   displayName: Deploy stage
@@ -107,27 +106,22 @@ stages:
             displayName: "download packages"
             artifact: npm
 
-#          - task: ExtractFiles@1
-#            displayName: "unzip packages"
-#            inputs:
-#              archiveFilePatterns: "$(Pipeline.Workspace)/npm/autonpm-$(Build.BuildNumber).tgz"
-#              destinationFolder: "$(Pipeline.Workspace)/npmout/autonpm"
-#              cleanDestinationFolder: true
-#              overwriteExistingFiles: true
-
-#          - task: Npm@1
-#            displayName: 'npm install'
-#            inputs:
-#              command: 'install'
-#              workingDir: '$(Pipeline.Workspace)/npm/autonpm'
+          - task: ExtractFiles@1
+            displayName: "unzip packages"
+            inputs:
+              archiveFilePatterns: "$(Pipeline.Workspace)/npm/brandup-autonpm-$(Build.BuildNumber).tgz"
+              destinationFolder: "$(Pipeline.Workspace)/npmout/brandup-autonpm"
+              cleanDestinationFolder: true
+              overwriteExistingFiles: true
 
           - task: Npm@1
             displayName: 'publish npm'
             inputs:
               command: publish
-              workingDir: '$(Pipeline.Workspace)/npm/autonpm'
+              workingDir: '$(Pipeline.Workspace)/npmout/brandup-autonpm'
               publishEndpoint: '$(publish-npm-credentials)'
 
+### Not work? require npmrc auth
 #          - task: Npm@1
 #            displayName: "publish autonpm"
 #            inputs:
