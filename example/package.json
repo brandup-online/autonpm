@@ -1,16 +1,16 @@
 {
 	"version": "1.0.0",
-	"name": "bnpm-example",
+	"name": "autonpm-example",
 	"private": true,
 	"dependencies": {},
 	"devDependencies": {
-		"bnpm": "file:../"
+		"autonpm": "file:../"
 	},
 	"scripts": {
-		"npm:install": "bnpm install",
-		"npm:build": "bnpm build",
-		"version": "bnpm version",
-		"npm:pack": "bnpm pack",
-		"version-custom": "bnpm-version"
+		"npm:install": "autonpm install",
+		"npm:build": "autonpm build",
+		"version": "autonpm version",
+		"npm:pack": "autonpm pack",
+		"version-custom": "autonpm-version"
 	}
 }

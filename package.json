@@ -1,6 +1,6 @@
 {
 	"version": "1.0.0",
-	"name": "bnpm",
+	"name": "autonpm",
 	"description": "Automation of multiple execution of NPM scripts.",
 	"keywords": [
 		"brandup",
@@ -29,8 +29,8 @@
 	},
 	"license": "Apache-2.0",
 	"bin": { 
-		"bnpm": "src/npm.js",
-		"bnpm-version": "./src/updateversion.js"
+		"autonpm": "src/npm.js",
+		"autonpm-version": "./src/updateversion.js"
 	},
 	"files": [ 
 		"src", 
