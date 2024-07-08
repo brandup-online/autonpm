@@ -105,10 +105,11 @@ stages:
               cleanDestinationFolder: true
               overwriteExistingFiles: true
 
-          - task: npmAuthenticate@0
+          - task: Npm@1
+            displayName: 'npm install'
             inputs:
-              workingFile: '$(Pipeline.Workspace)/npmout/'
-              customEndpoint: 'npm brandup'
+              command: 'install'
+              workingDir: '$(Pipeline.Workspace)/npmout/bnpm/package'
 
           - task: Npm@1
             displayName: 'publish npm'
