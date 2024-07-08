@@ -12,7 +12,7 @@ variables:
 - name: envName
   value: 'bnpm'
 - name: version-major
-  value: '0'
+  value: '1'
 - name: version-minor
   value: '0'
 

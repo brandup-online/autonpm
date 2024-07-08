@@ -34,8 +34,7 @@
 	},
 	"files": [ 
 		"src", 
-		"README.md", 
-		"package.json"
+		"README.md"
 	],
 	"devDependencies": {
 		"upath": "^2.0.1"
