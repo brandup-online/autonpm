@@ -121,17 +121,17 @@ stages:
 #              command: 'install'
 #              workingDir: '$(Pipeline.Workspace)/npm/autonpm'
 
-#          - task: Npm@1
-#            displayName: 'publish npm'
-#            inputs:
-#              command: publish
-#              workingDir: '$(Pipeline.Workspace)/npm/autonpm'
-#              publishEndpoint: '$(publish-npm-credentials)'
-
           - task: Npm@1
-            displayName: "publish autonpm"
+            displayName: 'publish npm'
             inputs:
-              command: "custom"
-              workingDir: "$(Pipeline.Workspace)/npm"
-              customCommand: "publish brandup-autonpm-$(Build.BuildNumber).tgz --access public"
-              customEndpoint: '$(publish-npm-credentials)'
+              command: publish
+              workingDir: '$(Pipeline.Workspace)/npm/autonpm'
+              publishEndpoint: '$(publish-npm-credentials)'
+
+#          - task: Npm@1
+#            displayName: "publish autonpm"
+#            inputs:
+#              command: "custom"
+#              workingDir: "$(Pipeline.Workspace)/npm"
+#              customCommand: "publish brandup-autonpm-$(Build.BuildNumber).tgz --access public"
+#              customEndpoint: '$(publish-npm-credentials)'
