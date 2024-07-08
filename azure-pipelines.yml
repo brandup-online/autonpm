@@ -109,7 +109,7 @@ stages:
             displayName: 'publish npm'
             inputs:
               command: publish
-              workingDir: '$(Pipeline.Workspace)/npmout/bnpm/'
+              workingDir: '$(Pipeline.Workspace)/npmout/bnpm/package'
               publishEndpoint: '$(publish-npm-credentials)'
 
 #          - task: Npm@1
