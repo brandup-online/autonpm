@@ -5,6 +5,7 @@ resources:
 - repo: self
 
 variables:
+- group: public-npm
 - name: vmImageName
   value: 'ubuntu-latest'
 - name: envName
@@ -89,8 +90,6 @@ stages:
 - stage: Production
   displayName: Deploy stage
   dependsOn: Build
-  variables:
-  - group: public-npm
   jobs:
   - deployment: Production
     condition: succeeded()
