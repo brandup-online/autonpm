@@ -51,11 +51,21 @@ stages:
         command: custom
         customCommand: 'version "$(Build.BuildNumber)" --no-git-tag-version'
 
-    - task: "Npm@1"
-      displayName: "npm pack"
+#    - task: "Npm@1"
+#      displayName: "npm pack"
+#      inputs:
+#        command: custom
+#        customCommand: "pack --pack-destination $(Build.ArtifactStagingDirectory)"
+
+    - task: CopyFiles@2
+      displayName: 'bnpm copy to artifact'
       inputs:
-        command: custom
-        customCommand: "pack --pack-destination $(Build.ArtifactStagingDirectory)"
+        SourceFolder: ''
+        Contents: |
+         src/**
+         package.json
+         README.md
+        TargetFolder: '$(Build.ArtifactStagingDirectory)/bnpm/'
 
     - publish: $(build.artifactstagingdirectory)
       displayName: publish artifact
@@ -97,25 +107,25 @@ stages:
             displayName: "download packages"
             artifact: npm
 
-          - task: ExtractFiles@1
-            displayName: "unzip packages"
-            inputs:
-              archiveFilePatterns: "$(Pipeline.Workspace)/npm/bnpm-$(Build.BuildNumber).tgz"
-              destinationFolder: "$(Pipeline.Workspace)/npmout/bnpm"
-              cleanDestinationFolder: true
-              overwriteExistingFiles: true
+#          - task: ExtractFiles@1
+#            displayName: "unzip packages"
+#            inputs:
+#              archiveFilePatterns: "$(Pipeline.Workspace)/npm/bnpm-$(Build.BuildNumber).tgz"
+#              destinationFolder: "$(Pipeline.Workspace)/npmout/bnpm"
+#              cleanDestinationFolder: true
+#              overwriteExistingFiles: true
 
-          - task: Npm@1
-            displayName: 'npm install'
-            inputs:
-              command: 'install'
-              workingDir: '$(Pipeline.Workspace)/npmout/bnpm/package'
+#          - task: Npm@1
+#            displayName: 'npm install'
+#            inputs:
+#              command: 'install'
+#              workingDir: '$(Pipeline.Workspace)/npm/bnpm'
 
           - task: Npm@1
             displayName: 'publish npm'
             inputs:
               command: publish
-              workingDir: '$(Pipeline.Workspace)/npmout/bnpm/package'
+              workingDir: '$(Pipeline.Workspace)/npm/bnpm'
               publishEndpoint: '$(publish-npm-credentials)'
 
 #          - task: Npm@1
