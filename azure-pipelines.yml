@@ -105,6 +105,11 @@ stages:
               cleanDestinationFolder: true
               overwriteExistingFiles: true
 
+          - task: npmAuthenticate@0
+            inputs:
+              workingFile: '$(Pipeline.Workspace)/npmout/'
+              customEndpoint: 'npm brandup'
+
           - task: Npm@1
             displayName: 'publish npm'
             inputs:
