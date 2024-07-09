@@ -14,6 +14,14 @@ const relativePackagesPath = process.env.NPM_PATH || 'npm';
 const rootDir = process.cwd();
 const npmDir = upath.join(rootDir, relativePackagesPath);
 
+const npmPackages = [];
+fs.readdirSync(npmDir, { recursive: false }).forEach(file => {
+    let packageFile = upath.join(npmDir, file, "package.json");
+    let packageJson = getPackageJson(packageFile);
+    
+    npmPackages.push(packageJson.name);
+});
+
 fs.readdirSync(npmDir, { recursive: false }).forEach(file => {
     let packageFile = upath.join(npmDir, file, "package.json");
     let packageJson = getPackageJson(packageFile);
@@ -21,8 +29,11 @@ fs.readdirSync(npmDir, { recursive: false }).forEach(file => {
     packageJson.version = buildVersion;
 
     for (let key in packageJson.dependencies) {
-        if (!key.startsWith("brandup-ui") && !packageJson.dependencies[key].startsWith("file:../"))
+        if (!packageJson.dependencies[key].startsWith("file:../"))
             continue;
+
+        if (npmPackages.indexOf(key) === -1)
+            throw `Not found package dependency ${key} in ${file}.`;
 
         packageJson.dependencies[key] = `^${buildVersion}`;
     }

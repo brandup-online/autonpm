@@ -34,7 +34,7 @@
 	"license": "Apache-2.0",
 	"bin": { 
 		"autonpm": "src/npm.js",
-		"autonpm-version": "./src/updateversion.js"
+		"autonpm-version": "src/updateversion.js"
 	},
 	"files": [ 
 		"src", 
