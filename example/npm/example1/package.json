@@ -6,7 +6,7 @@
 		"example2": "file:../example2"
 	},
 	"devDependencies": {
-		"typescript": "^5.4.2"
+		"typescript": "^5.5.3"
 	},
 	"scripts": {
 		"build": "tsc"

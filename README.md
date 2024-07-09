@@ -4,6 +4,8 @@
 
 `autonpm install` - применяет npm i ко всем пакетам в корневой папке.
 
+`autonpm update` - применяет npm update ко всем пакетам в корневой папке.
+
 `autonpm version` - применяет npm version ко всем пакетам в корневой папке.
 
 `autonpm pack` - применяет npm pack ко всем пакетам в корневой папке.

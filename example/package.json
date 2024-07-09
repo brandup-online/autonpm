@@ -8,6 +8,7 @@
 	},
 	"scripts": {
 		"npm:install": "autonpm install",
+		"npm:update": "autonpm update -save",
 		"npm:build": "autonpm build",
 		"version": "autonpm version",
 		"npm:pack": "autonpm pack",
