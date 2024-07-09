@@ -40,7 +40,7 @@
 		"src", 
 		"README.md"
 	],
-	"devDependencies": {
+	"dependencies": {
 		"upath": "^2.0.1"
 	}
 }
