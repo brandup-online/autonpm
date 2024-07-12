@@ -1,15 +1,15 @@
 # autonpm
 
-`autonpm build` - применяет npm run build ко всем пакетам в корневой папке.
+`autonpm build` - runs ***nmp run build*** to all packages in the root directory.
 
-`autonpm install` - применяет npm i ко всем пакетам в корневой папке.
+`autonpm install` - runs ***nmp i*** to all packages in the root directory.
 
-`autonpm update` - применяет npm update ко всем пакетам в корневой папке.
+`autonpm update` - runs ***nmp update*** to all packages in the root directory.
 
-`autonpm version` - применяет npm version ко всем пакетам в корневой папке.
+`autonpm version` - runs ***nmp version*** to all packages in the root directory.
 
-`autonpm pack` - применяет npm pack ко всем пакетам в корневой папке.
+`autonpm pack` - runs ***nmp pack*** to all packages in the root directory.
 
-По умолчанию в качестве корневого каталога используется `./npm`. Для иземенения корневого католога исполльзуйте env переменную `NPM_PATH`.
+By default, `./npm` is used as the root directory. To change the root directory, use the env variable `NPM_PATH`.
 
-Пример: `"npm:install": "cross-env NPM_PATH=custom_dir autonpm install"`
+Example: `"npm:install": "cross-env NPM_PATH=custom_dir autonpm install"`
