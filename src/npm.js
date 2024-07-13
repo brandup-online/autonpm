@@ -43,19 +43,26 @@ fs.readdirSync(packagesPath, { recursive: false }).forEach(dir => {
 	if (!fs.lstatSync(dirPath).isDirectory())
 		return;
 
-    const child = execute(commandName, dirPath, dir, commandStr);
+    const child = execute(commandName, dirPath, dir, commandStr, commandName === "watch");
 	childs.push(child);
 });
 
 // wait all child tasks
-Promise.all(childs).then(() => {
-	console.info('');
-	console.info(`-------end ${commandName}-------`);
+Promise.all(childs)
+	.then(() => {
+		console.info('');
+		console.info(`-------end ${commandName}-------`);
 
-	process.exit(0);
-});
+		process.exit(0);
+	})
+	.catch(reason => {
+		console.info('');
+		console.info(`-------error ${commandName}-------`);
 
-function execute(commandName, dirPath, dirName, command) {
+		process.exit(1);
+	});
+
+function execute(commandName, dirPath, dirName, command, multy) {
 	console.info('');
 	console.info(`-------${dirName}-------`);
 	console.info('');
@@ -63,28 +70,43 @@ function execute(commandName, dirPath, dirName, command) {
 	console.info(`${dirPath} ${command}`);
 	console.info('');
 
-	const subprocess = childProcess.exec(`cd ${dirPath} && ${command}`, {
-		encoding: 'utf8',
-		shell: true,
-		stdio: 'inherit',
-		detached: false
-	});
-
-	subprocess.stdout.on('data', (data) => {
-		console.log(`stdout ${dirName} ${commandName}: ${data}`);
-	});
-	
-	subprocess.stderr.on('data', (data) => {
-		console.error(`stderr ${dirName} ${commandName}: ${data}`);
-	});
-
-	subprocess.on('close', (code) => {
-		console.log(`${dirName} ${commandName} exited with code ${code}`);
-	});
-
-	return new Promise(resolve => {
-		subprocess.on('close', (code) => {
-			resolve(null);
+	if (multy) {
+		const subprocess = childProcess.exec(`cd ${dirPath} && ${command}`, {
+			encoding: 'utf8',
+			shell: true,
+			stdio: 'inherit',
+			detached: false
 		});
-	});
+
+		subprocess.stdout.on('data', (data) => {
+			console.log(`stdout ${dirName} ${commandName}: ${data}`);
+		});
+		
+		subprocess.stderr.on('data', (data) => {
+			console.error(`stderr ${dirName} ${commandName}: ${data}`);
+		});
+
+		subprocess.on('close', (code) => {
+			console.log(`${dirName} ${commandName} exited with code ${code}`);
+		});
+
+		return new Promise((resolve, reject) => {
+			subprocess.on('close', (code) => {
+				if (code == 0)
+					resolve(null);
+				else
+					reject(`${dirName} ${commandName} exited with code ${code}`);
+			});
+		});
+	}
+	else {
+		childProcess.execSync(`cd ${dirPath} && ${command}`, {
+			encoding: 'utf8',
+			shell: true,
+			stdio: 'inherit',
+			detached: false
+		});
+
+		return new Promise((resolve, reject) => { resolve(null); });
+	}
 }
