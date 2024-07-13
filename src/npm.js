@@ -10,6 +10,7 @@ const commands = {
     install: (args) => `npm install ${args}`,
     update: (args) => `npm update ${args}`,
     build: (args) => `npm run build ${args}`,
+	watch: (args) => `npm run watch ${args}`,
     version: (args) => `npm version ${args}`,
     pack: (args) => `npm pack ${args}`
 }
@@ -36,18 +37,25 @@ console.info(`command argumments: ${commandArgs}`);
 const packagesPath = path.join(process.cwd(), relativePackagesPath);
 console.info(`packages path: ${packagesPath}`);
 
+const childs = [];
 fs.readdirSync(packagesPath, { recursive: false }).forEach(dir => {
     const dirPath = path.join(packagesPath, dir);
 	if (!fs.lstatSync(dirPath).isDirectory())
 		return;
 
-    execute(dirPath, dir, commandStr);
+    const child = execute(commandName, dirPath, dir, commandStr);
+	childs.push(child);
 });
 
-console.info('');
-console.info(`-------end ${commandName}-------`);
+// wait all child tasks
+Promise.all(childs).then(() => {
+	console.info('');
+	console.info(`-------end ${commandName}-------`);
 
-function execute(dirPath, dirName, command) {
+	process.exit(0);
+});
+
+function execute(commandName, dirPath, dirName, command) {
 	console.info('');
 	console.info(`-------${dirName}-------`);
 	console.info('');
@@ -55,11 +63,28 @@ function execute(dirPath, dirName, command) {
 	console.info(`${dirPath} ${command}`);
 	console.info('');
 
-	const subprocess = childProcess.execSync(`cd ${dirPath} && ${command}`, {
+	const subprocess = childProcess.exec(`cd ${dirPath} && ${command}`, {
 		encoding: 'utf8',
 		shell: true,
-		stdio:'inherit'
+		stdio: 'inherit',
+		detached: false
 	});
 
-	return subprocess;
+	subprocess.stdout.on('data', (data) => {
+		console.log(`stdout ${dirName} ${commandName}: ${data}`);
+	});
+	
+	subprocess.stderr.on('data', (data) => {
+		console.error(`stderr ${dirName} ${commandName}: ${data}`);
+	});
+
+	subprocess.on('close', (code) => {
+		console.log(`${dirName} ${commandName} exited with code ${code}`);
+	});
+
+	return new Promise(resolve => {
+		subprocess.on('close', (code) => {
+			resolve(null);
+		});
+	});
 }

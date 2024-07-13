@@ -9,6 +9,7 @@
 		"typescript": "^5.5.3"
 	},
 	"scripts": {
-		"build": "tsc"
+		"build": "tsc",
+		"watch": "tsc -w"
 	}
 }

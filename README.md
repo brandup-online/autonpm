@@ -1,10 +1,12 @@
 # autonpm
 
-`autonpm build` - runs ***nmp run build*** to all packages in the root directory.
-
 `autonpm install` - runs ***nmp i*** to all packages in the root directory.
 
 `autonpm update` - runs ***nmp update*** to all packages in the root directory.
+
+`autonpm build` - runs ***nmp run build*** to all packages in the root directory.
+
+`autonpm watch` - runs ***nmp run watch*** to all packages in the root directory.
 
 `autonpm version` - runs ***nmp version*** to all packages in the root directory.
 

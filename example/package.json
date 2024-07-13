@@ -10,6 +10,7 @@
 		"npm:install": "autonpm install",
 		"npm:update": "autonpm update -save",
 		"npm:build": "autonpm build",
+		"npm:watch": "autonpm watch",
 		"npm:version": "autonpm version",
 		"npm:pack": "autonpm pack",
 		"version-custom": "autonpm-version"
