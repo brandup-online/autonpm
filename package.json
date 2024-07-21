@@ -7,37 +7,38 @@
 		"npm"
 	],
 	"author": {
-    	"name": "BrandUp",
-    	"email": "it@brandup.online"
-  	},
-  	"contributors": [
-    	{
-      		"name": "Mikhail Nazarov",
-      		"url": "https://github.com/Mikhail-Nazarov",
-      		"email": "misha-nazarov.nazarov@yandex.ru"
-    	},
-    	{
-      		"name": "Dmitry Kovyazin",
-      		"url": "https://github.com/dkovyazin",
-    		"email": "it@brandup.online"
-    	}
-  	],
+		"name": "BrandUp",
+		"email": "it@brandup.online"
+	},
+	"contributors": [
+		{
+			"name": "Mikhail Nazarov",
+			"url": "https://github.com/Mikhail-Nazarov",
+			"email": "misha-nazarov.nazarov@yandex.ru"
+		},
+		{
+			"name": "Dmitry Kovyazin",
+			"url": "https://github.com/dkovyazin",
+			"email": "it@brandup.online"
+		}
+	],
 	"homepage": "https://github.com/brandup-online/autonpm",
 	"repository": {
-	  	"type": "git",
-	  	"url": "https://github.com/brandup-online/autonpm"
+		"type": "git",
+		"url": "https://github.com/brandup-online/autonpm"
 	},
 	"bugs": {
 		"url": "https://github.com/brandup-online/autonpm/issues",
 		"email": "it@brandup.online"
 	},
 	"license": "Apache-2.0",
-	"bin": { 
+	"bin": {
 		"autonpm": "src/npm.js",
-		"autonpm-version": "src/updateversion.js"
+		"autonpm-version": "src/version.js",
+		"autonpm-cleanup": "src/cleanup.js"
 	},
-	"files": [ 
-		"src", 
+	"files": [
+		"src",
 		"README.md"
 	],
 	"dependencies": {
