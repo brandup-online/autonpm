@@ -14,7 +14,6 @@ fs.readdirSync(npmDir, { recursive: false }).forEach(file => {
     let packageJson = getPackageJson(packageFile);
     
     delete packageJson.devDependencies;
-    delete packageJson.files;
     delete packageJson.scripts;
 
     setPackageJson(packageFile, packageJson);

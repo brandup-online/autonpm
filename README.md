@@ -10,7 +10,7 @@
 
 `autonpm-version 1.1.1` - set version and dependency versions of all package.json file in the root directory.
 
-`autonpm-cleanup` - demove devDependencies, files and scripts of all package.json file in the root directory.
+`autonpm-cleanup` - demove devDependencies and scripts of all package.json file in the root directory.
 
 `autonpm pack` - runs ***nmp pack*** to all packages in the root directory.
 
