@@ -1,22 +1,21 @@
 #!/usr/bin/env node
 'use strict';
 
-const fs = require('fs');
 const upath = require('upath');
-const { getPackageJson, setPackageJson } = require('./utils');
+const { listPackages, getPackageJson, setPackageJson } = require('./utils');
 
-const relativePackagesPath = process.env.NPM_PATH || 'npm';
 const rootDir = process.cwd();
-const npmDir = upath.join(rootDir, relativePackagesPath);
+const relativePackagesPath = process.env.NPM_PATH || 'npm';
+const packagesPath = upath.join(rootDir, relativePackagesPath);
 
-fs.readdirSync(npmDir, { recursive: false }).forEach(file => {
-    let packageFile = upath.join(npmDir, file, "package.json");
-    let packageJson = getPackageJson(packageFile);
+const packages = listPackages(packagesPath);
+packages.forEach(pkg => {
+    let packageJson = getPackageJson(pkg.jsonFile);
     
     delete packageJson.devDependencies;
     delete packageJson.scripts;
 
-    setPackageJson(packageFile, packageJson);
+    setPackageJson(pkg.jsonFile, packageJson);
 
-    console.log(`cleanup npm package: ${packageFile}`);
+    console.log(`cleanup package ${pkg.name}`);
 });

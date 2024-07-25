@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
 const childProcess = require( 'child_process' );
-const fs = require( 'fs' );
 const path = require( 'path' );
+const { listPackages } = require('./utils');
 
 const getArgsList = (startIndex = 3) => process.argv.reduce((acc, current, index) => index >= startIndex? acc += current + " " : '', '');
 
@@ -38,12 +38,9 @@ const packagesPath = path.join(process.cwd(), relativePackagesPath);
 console.info(`packages path: ${packagesPath}`);
 
 const childs = [];
-fs.readdirSync(packagesPath, { recursive: false }).forEach(dir => {
-    const dirPath = path.join(packagesPath, dir);
-	if (!fs.lstatSync(dirPath).isDirectory())
-		return;
-
-    const child = execute(commandName, dirPath, dir, commandStr, commandName === "watch");
+const packages = listPackages(packagesPath);
+packages.forEach(pkg => {
+	const child = execute(commandName, pkg.dir, pkg.dirName, commandStr, commandName === "watch");
 	childs.push(child);
 });
 
