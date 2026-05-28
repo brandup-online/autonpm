@@ -399,3 +399,4 @@ FodyWeavers.xsd
 **/package-lock.json
 example/**/*.js
 example/**/*.tgz
+.claude/settings.json

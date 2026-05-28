@@ -1,16 +1,17 @@
 #!/usr/bin/env node
+'use strict';
 
-const childProcess = require( 'child_process' );
-const path = require( 'path' );
+const childProcess = require('child_process');
+const path = require('path');
 const { listPackages } = require('./utils');
 
-const getArgsList = (startIndex = 3) => process.argv.reduce((acc, current, index) => index >= startIndex? acc += current + " " : '', '');
+const getArgsList = (startIndex = 3) => process.argv.slice(startIndex).join(' ');
 
 const commands = {
     install: (args) => `npm install ${args}`,
     update: (args) => `npm update ${args}`,
     build: (args) => `npm run build ${args}`,
-	watch: (args) => `npm run watch ${args}`,
+    watch: (args) => `npm run watch ${args}`,
     version: (args) => `npm version ${args}`,
     pack: (args) => `npm pack ${args}`
 }
@@ -26,7 +27,8 @@ if (!command)
     throw new Error(`Command ${commandName} is not found. Available commands: ${Object.keys(commands)}`);
 
 const commandArgs = getArgsList();
-const commandStr = command(commandArgs);
+const commandStr = command(commandArgs).trim();
+const isWatch = commandName === "watch";
 
 console.info(`-------begin ${commandName}-------`);
 console.info('');
@@ -37,73 +39,89 @@ console.info(`command argumments: ${commandArgs}`);
 const packagesPath = path.join(process.cwd(), relativePackagesPath);
 console.info(`packages path: ${packagesPath}`);
 
-const childs = [];
 const packages = listPackages(packagesPath);
-packages.forEach(pkg => {
-	const child = execute(commandName, pkg.dir, pkg.dirName, commandStr, commandName === "watch");
-	childs.push(child);
-});
 
-// wait all child tasks
-Promise.all(childs)
-	.then(() => {
-		console.info('');
-		console.info(`-------end ${commandName}-------`);
+if (isWatch)
+    runWatch(packages);
+else
+    runSequential(packages);
 
-		process.exit(0);
-	})
-	.catch(reason => {
-		console.info('');
-		console.info(`-------error ${commandName}-------`);
+function logHeader(pkg) {
+    console.info('');
+    console.info(`-------${pkg.dirName}-------`);
+    console.info('');
+    console.info(`${pkg.dir} ${commandStr}`);
+    console.info('');
+}
 
-		process.exit(1);
-	});
+// Build commands run in dependency order, so execute sequentially and fail fast.
+function runSequential(packages) {
+    try {
+        packages.forEach(pkg => {
+            logHeader(pkg);
+            childProcess.execSync(commandStr, {
+                cwd: path.resolve(pkg.dir),
+                stdio: 'inherit'
+            });
+        });
 
-function execute(commandName, dirPath, dirName, command, multy) {
-	console.info('');
-	console.info(`-------${dirName}-------`);
-	console.info('');
+        console.info('');
+        console.info(`-------end ${commandName}-------`);
+        process.exit(0);
+    }
+    catch (reason) {
+        console.error('');
+        console.error(`-------error ${commandName}-------`);
+        process.exit(1);
+    }
+}
 
-	console.info(`${dirPath} ${command}`);
-	console.info('');
+// Watch tasks are long-running, so run them concurrently.
+function runWatch(packages) {
+    const children = [];
 
-	if (multy) {
-		const subprocess = childProcess.exec(`cd ${dirPath} && ${command}`, {
-			encoding: 'utf8',
-			shell: true,
-			stdio: 'inherit',
-			detached: false
-		});
+    const tasks = packages.map(pkg => {
+        logHeader(pkg);
 
-		subprocess.stdout.on('data', (data) => {
-			console.log(`stdout ${dirName} ${commandName}: ${data}`);
-		});
-		
-		subprocess.stderr.on('data', (data) => {
-			console.error(`stderr ${dirName} ${commandName}: ${data}`);
-		});
+        const subprocess = childProcess.exec(commandStr, {
+            cwd: path.resolve(pkg.dir),
+            encoding: 'utf8'
+        });
+        children.push(subprocess);
 
-		subprocess.on('close', (code) => {
-			console.log(`${dirName} ${commandName} exited with code ${code}`);
-		});
+        subprocess.stdout.on('data', (data) => {
+            console.log(`stdout ${pkg.dirName} ${commandName}: ${data}`);
+        });
 
-		return new Promise((resolve, reject) => {
-			subprocess.on('close', (code) => {
-				if (code == 0)
-					resolve(null);
-				else
-					reject(`${dirName} ${commandName} exited with code ${code}`);
-			});
-		});
-	}
-	else {
-		childProcess.execSync(`cd ${dirPath} && ${command}`, {
-			encoding: 'utf8',
-			shell: true,
-			stdio: 'inherit',
-			detached: false
-		});
+        subprocess.stderr.on('data', (data) => {
+            console.error(`stderr ${pkg.dirName} ${commandName}: ${data}`);
+        });
 
-		return new Promise((resolve, reject) => { resolve(null); });
-	}
+        return new Promise((resolve, reject) => {
+            subprocess.on('close', (code) => {
+                console.log(`${pkg.dirName} ${commandName} exited with code ${code}`);
+                if (code === 0)
+                    resolve(null);
+                else
+                    reject(new Error(`${pkg.dirName} ${commandName} exited with code ${code}`));
+            });
+            subprocess.on('error', reject);
+        });
+    });
+
+    process.on('SIGINT', () => {
+        children.forEach(child => child.kill('SIGINT'));
+    });
+
+    Promise.all(tasks)
+        .then(() => {
+            console.info('');
+            console.info(`-------end ${commandName}-------`);
+            process.exit(0);
+        })
+        .catch(reason => {
+            console.error('');
+            console.error(`-------error ${commandName}-------`);
+            process.exit(1);
+        });
 }
