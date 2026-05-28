@@ -25,7 +25,7 @@
 	"homepage": "https://github.com/brandup-online/autonpm",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/brandup-online/autonpm"
+		"url": "git+https://github.com/brandup-online/autonpm.git"
 	},
 	"bugs": {
 		"url": "https://github.com/brandup-online/autonpm/issues",
