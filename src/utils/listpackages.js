@@ -6,31 +6,41 @@ const getPackageJson = require( './getpackagejson.js' );
 const LocationPackage = "file:../";
 
 const sort = function(source, result) {
+    const visiting = new Set();
     for (let i = 0; i < source.length; i++) {
-        const pkg = source[i];
-        paste(source, result, pkg.name);
+        paste(source, result, source[i].name, visiting);
     }
 };
 
-const paste = function(source, result, name) {
+const paste = function(source, result, name, visiting) {
     const depPkg = source.find((pkg) => pkg.name === name);
     if (!depPkg)
         throw new Error(`Not found dep package ${name}`);
 
+    if (result.find((pkg) => pkg.name === depPkg.name))
+        return;
+
+    if (visiting.has(name))
+        throw new Error(`Circular dependency detected involving package ${name}`);
+    visiting.add(name);
+
     if (depPkg.deps && depPkg.deps.length) {
         depPkg.deps.forEach(dep => {
-            paste(source, result, dep.name);
+            paste(source, result, dep.name, visiting);
         });
     }
 
-    if (!result.find((pkg) => pkg.name === depPkg.name))
-        result.push(depPkg);
+    visiting.delete(name);
+    result.push(depPkg);
 }
 
 module.exports = function(packagesDir) {
+    if (!fs.existsSync(packagesDir))
+        throw new Error(`Packages directory not found: ${packagesDir}. Set NPM_PATH to the directory containing your packages.`);
+
     const packages = [];
 
-    fs.readdirSync(packagesDir, { recursive: false }).forEach(dirName => {    
+    fs.readdirSync(packagesDir, { recursive: false }).forEach(dirName => {
         const dirPath = upath.join(packagesDir, dirName);
         if (!fs.lstatSync(dirPath).isDirectory())
             return;
