@@ -46,11 +46,12 @@ Each command runs the corresponding npm command inside every discovered package.
 
 | Command | Runs in each package | Notes |
 | --- | --- | --- |
-| `autonpm install` | `npm install` | Sequential, dependency order |
+| `autonpm install [--nofix]` | `npm install` | Sequential; auto-runs `npm audit fix` after install. Pass `--nofix` to skip. |
 | `autonpm update` | `npm update` | Sequential, dependency order |
 | `autonpm build` | `npm run build` | Sequential, dependency order |
 | `autonpm pack` | `npm pack` | Sequential, dependency order |
 | `autonpm version <v>` | `npm version <v>` | Sequential, dependency order |
+| `autonpm audit [fix] [--force]` | `npm audit …` | Sequential, dependency order |
 | `autonpm watch` | `npm run watch` | Runs all packages concurrently |
 
 Examples:
@@ -60,12 +61,53 @@ autonpm install
 autonpm update --save
 autonpm build
 autonpm watch
+autonpm audit
+autonpm audit fix
+autonpm audit fix --force
 ```
 
 ### Sequential vs. concurrent
 
-- `install`, `update`, `build`, `pack`, `version` run **one package at a time** in dependency order and stop on the first failure (non-zero exit). This guarantees a dependency is built before the packages that consume it.
+- `install`, `update`, `build`, `pack`, `version`, `audit` run **one package at a time** in dependency order and stop on the first failure (non-zero exit). This guarantees a dependency is built before the packages that consume it.
 - `watch` starts a long-running watcher for **every package at once**. Output from each watcher is prefixed with the package name so you can tell them apart. Pressing `Ctrl+C` forwards `SIGINT` to all child processes so they shut down cleanly.
+
+### Audit and auto-fix after install
+
+After `autonpm install` completes, `npm audit` is run silently in each package. A summary is printed, then fixes are applied automatically:
+
+- If a package has fixable vulnerabilities → `npm audit fix` runs in that package.
+- If a fix requires a breaking (semver-major) upgrade → `npm audit fix --force` runs instead.
+
+```
+-------audit summary-------
+
+  core: no vulnerabilities
+  ui: 2 high, 1 moderate [fixable]
+  widgets: 1 critical [requires --force]
+
+-------auto audit fix-------
+
+  ui: npm audit fix
+  ...
+  widgets: npm audit fix --force
+  ...
+```
+
+Pass `--nofix` to skip the automatic fix and only print the summary with a recommendation:
+
+```bash
+autonpm install --nofix
+```
+
+Each package line in the summary shows vulnerability counts by severity and one of three fix notes:
+
+| Note | Meaning |
+| --- | --- |
+| `[fixable]` | Fixed by `npm audit fix` |
+| `[requires --force]` | Fix involves a semver-major upgrade; fixed by `npm audit fix --force` |
+| `[no fix available]` | No automated fix exists yet |
+
+If no vulnerabilities are found across all packages, `No vulnerabilities found.` is printed instead.
 
 ## Publishing helpers
 
@@ -121,6 +163,8 @@ Add these to your workspace root `package.json` so the whole repo is driven thro
     "npm:update": "autonpm update --save",
     "npm:build": "autonpm build",
     "npm:watch": "autonpm watch",
+    "npm:audit": "autonpm audit",
+    "npm:audit:fix": "autonpm audit fix",
     "npm:version": "autonpm-version",
     "npm:pack": "autonpm pack",
     "npm:cleanup": "autonpm-cleanup"
