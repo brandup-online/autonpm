@@ -46,7 +46,7 @@ Each command runs the corresponding npm command inside every discovered package.
 
 | Command | Runs in each package | Notes |
 | --- | --- | --- |
-| `autonpm install [--nofix]` | `npm install` | Sequential; auto-runs `npm audit fix` after install. Pass `--nofix` to skip. |
+| `autonpm install [--fix]` | `npm install` | Sequential; prints audit summary after install. Pass `--fix` to also apply `npm audit fix`. |
 | `autonpm update` | `npm update` | Sequential, dependency order |
 | `autonpm build` | `npm run build` | Sequential, dependency order |
 | `autonpm pack` | `npm pack` | Sequential, dependency order |
@@ -71,12 +71,9 @@ autonpm audit fix --force
 - `install`, `update`, `build`, `pack`, `version`, `audit` run **one package at a time** in dependency order and stop on the first failure (non-zero exit). This guarantees a dependency is built before the packages that consume it.
 - `watch` starts a long-running watcher for **every package at once**. Output from each watcher is prefixed with the package name so you can tell them apart. Pressing `Ctrl+C` forwards `SIGINT` to all child processes so they shut down cleanly.
 
-### Audit and auto-fix after install
+### Audit summary and opt-in fix after install
 
-After `autonpm install` completes, `npm audit` is run silently in each package. A summary is printed, then fixes are applied automatically:
-
-- If a package has fixable vulnerabilities → `npm audit fix` runs in that package.
-- If a fix requires a breaking (semver-major) upgrade → `npm audit fix --force` runs instead.
+After `autonpm install` completes, `npm audit` is run silently in each package and a summary is printed. By default no fix is applied — a recommendation is shown when fixes are available:
 
 ```
 -------audit summary-------
@@ -85,18 +82,16 @@ After `autonpm install` completes, `npm audit` is run silently in each package. 
   ui: 2 high, 1 moderate [fixable]
   widgets: 1 critical [requires --force]
 
--------auto audit fix-------
-
-  ui: npm audit fix
-  ...
-  widgets: npm audit fix --force
-  ...
+Recommendation: run `autonpm install --fix` (will apply `npm audit fix --force`)
 ```
 
-Pass `--nofix` to skip the automatic fix and only print the summary with a recommendation:
+Pass `--fix` to also apply fixes automatically:
+
+- If a package has fixable vulnerabilities → `npm audit fix` runs in that package.
+- If a fix requires a breaking (semver-major) upgrade → `npm audit fix --force` runs instead.
 
 ```bash
-autonpm install --nofix
+autonpm install --fix
 ```
 
 Each package line in the summary shows vulnerability counts by severity and one of three fix notes:

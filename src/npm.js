@@ -29,8 +29,8 @@ const isWatch = commandName === "watch";
 const isInstall = commandName === "install";
 
 const rawArgs = process.argv.slice(3);
-const noFix = isInstall && rawArgs.includes('--nofix');
-const commandArgs = (isInstall ? rawArgs.filter(a => a !== '--nofix') : rawArgs).join(' ');
+const autoFix = isInstall && rawArgs.includes('--fix');
+const commandArgs = (isInstall ? rawArgs.filter(a => a !== '--fix') : rawArgs).join(' ');
 const commandStr = command(commandArgs).trim();
 
 console.info(`-------begin ${commandName}-------`);
@@ -138,11 +138,11 @@ function runAutoFix(auditResults) {
         return;
     }
 
-    if (noFix) {
+    if (!autoFix) {
         if (anyForceRequired)
-            console.info('Recommendation: run `autonpm audit fix --force`');
+            console.info('Recommendation: run `autonpm install --fix` (will apply `npm audit fix --force`)');
         else if (anyFixable)
-            console.info('Recommendation: run `autonpm audit fix`');
+            console.info('Recommendation: run `autonpm install --fix` (will apply `npm audit fix`)');
         else
             console.info('No automatic fixes available. Review vulnerabilities manually.');
         console.info('');
